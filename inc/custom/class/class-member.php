@@ -86,7 +86,7 @@ class Member extends Bootstrap
 				$productID = $item->get_product_id();
 
 				// 检查是否已存在相同的productID
-				if (!in_array($productID, $existingProductIDs)) {
+				if (!in_array($productID, $existingProductIDs) && wc_get_product($productID)) {
 					$productName = wc_get_product($productID)->get_name();
 					$Product = array(
 						'productName' => $productName,
@@ -119,7 +119,7 @@ class Member extends Bootstrap
 			$productID = $data['product_id'];
 			wc_get_product();
 			// 检查是否已存在相同的productID
-			if (!in_array($productID, $existingCartProductIDs)) {
+			if (!in_array($productID, $existingCartProductIDs) && wc_get_product($productID)) {
 				$productName = wc_get_product($productID)->get_name();
 				$Product = array(
 					'productName' => $productName,

@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: r2-member-filter
- * Description: 可根據wc訂單 / 時間 / 動作(加入購物車/購買)等條件篩選會員
+ * Description: 可以對已註冊會員進行篩選，並將篩選結果匯出成 CSV 檔案。篩選條件包含已購買過商品、購物車未結商品，並且可對已完成訂單數量進行排序
  * Author: R2
  * Author URI: https://github.com/j7-dev
  * License: GPLv2

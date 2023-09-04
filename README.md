@@ -48,8 +48,8 @@ Tech stacks (knowledge you need to have)
 1. Clone this repository into `/wp-content/plugins`.
    ```sh
    cd  {your-project}/wp-content/plugins
-   git clone https://github.com/j7-dev/boilerplate-react-SPA.wordpress-plugin.git
-   cd boilerplate-react-SPA.wordpress-plugin
+   git clone https://github.com/j7-dev/r2-member-filter.git
+   cd r2-member-filter
    ```
 2. Install dependencies:
 

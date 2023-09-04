@@ -26,6 +26,7 @@ class Bootstrap
 				'var' => $_ENV['SNAKE'] . '_test',
 			),
 		));
+		new Member();
 	}
 
 	public function init(): void
@@ -86,6 +87,25 @@ class Bootstrap
 			'root' => \esc_url_raw(rest_url()),
 			'nonce' => \wp_create_nonce('wp_rest'),
 		));
+	}
+
+	public static function get_plugin_dir(): string
+	{
+		$plugin_dir = \wp_normalize_path(\plugin_dir_path(__DIR__ . '../'));
+		return $plugin_dir;
+	}
+
+	public static function get_plugin_url(): string
+	{
+		$plugin_url = \plugin_dir_url(self::get_plugin_dir() . 'plugin.php');
+		return $plugin_url;
+	}
+
+	public static function get_plugin_ver(): string
+	{
+		$plugin_data = \get_plugin_data(self::get_plugin_dir() . 'plugin.php');
+		$plugin_ver = $plugin_data['Version'];
+		return $plugin_ver;
 	}
 }
 

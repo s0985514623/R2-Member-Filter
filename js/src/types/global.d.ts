@@ -12,6 +12,10 @@ declare global {
     permalink: string
     checkoutUrl: string
   }
+
+  var memderData: {
+    usersDataAarray: []
+  }
 }
 
 export {}

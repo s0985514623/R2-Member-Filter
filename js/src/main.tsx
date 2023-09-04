@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import App2 from './App2'
+
+// import App2 from './App2'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -29,15 +30,15 @@ if (!!id1) {
   )
 }
 
-const id2 = document.getElementById(renderId2)
+// const id2 = document.getElementById(renderId2)
 
-if (!!id2) {
-  ReactDOM.createRoot(id2).render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <App2 />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </React.StrictMode>,
-  )
-}
+// if (!!id2) {
+//   ReactDOM.createRoot(id2).render(
+//     <React.StrictMode>
+//       <QueryClientProvider client={queryClient}>
+//         <App2 />
+//         <ReactQueryDevtools initialIsOpen={false} />
+//       </QueryClientProvider>
+//     </React.StrictMode>,
+//   )
+// }

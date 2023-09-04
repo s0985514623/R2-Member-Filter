@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Plugin Name: Boilerplate-React-SPA.WordPress-Plugin (BRSWP)
- * Description: BRSWP is a boilerplate for creating a WordPress plugin with React, Tailwind, TypeScript, React Query v4, SCSS and Vite.
- * Author: j7.dev
+ * Plugin Name: r2-member-filter
+ * Description: 可根據wc訂單 / 時間 / 動作(加入購物車/購買)等條件篩選會員
+ * Author: R2
  * Author URI: https://github.com/j7-dev
  * License: GPLv2
  * Version: 1.1.0
- * Requires PHP: 8.1
+ * Requires PHP: 7.4
  */
 
 /**

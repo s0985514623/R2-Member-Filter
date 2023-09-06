@@ -32,17 +32,7 @@ export type TPost = {
   ping_status: 'open' | 'closed'
   sticky: boolean
   template: string
-  format:
-    | 'standard'
-    | 'aside'
-    | 'chat'
-    | 'gallery'
-    | 'link'
-    | 'image'
-    | 'quote'
-    | 'status'
-    | 'video'
-    | 'audio'
+  format: 'standard' | 'aside' | 'chat' | 'gallery' | 'link' | 'image' | 'quote' | 'status' | 'video' | 'audio'
   meta: {
     [key: string]: any
   }

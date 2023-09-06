@@ -19,11 +19,7 @@ export const updateResource = async ({
   config?: AxiosRequestConfig<{ [key: string]: any }> | undefined
 }) => {
   const dataProviderUrlParams = getDataProviderUrlParams(dataProvider)
-  const updateResult = await axios.post(
-    `${apiUrl}${dataProviderUrlParams}${resource}/${pathParams.join('/')}`,
-    args,
-    config,
-  )
+  const updateResult = await axios.post(`${apiUrl}${dataProviderUrlParams}${resource}/${pathParams.join('/')}`, args, config)
 
   return updateResult
 }

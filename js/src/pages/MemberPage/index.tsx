@@ -42,12 +42,8 @@ const MemberPage: React.FC = () => {
       姓名: user.Username,
       Email: user.Email,
       已完成訂單: user.CompletedOders,
-      購買過商品: user.CompletedProducts?.map(
-        (product) => product.productName,
-      ).join(', '),
-      購物車未結商品: user.CartProducts?.map(
-        (product) => product.productName,
-      ).join(', '),
+      購買過商品: user.CompletedProducts?.map((product) => product.productName).join(', '),
+      購物車未結商品: user.CartProducts?.map((product) => product.productName).join(', '),
     }))
     const csvConfig = mkConfig({
       filename: '會員篩選資料',
@@ -60,10 +56,7 @@ const MemberPage: React.FC = () => {
     setLoading(false)
   }
 
-  const onSelectChange = (
-    newSelectedRowKeys: React.Key[],
-    selectedRows: UsersDataArray[],
-  ) => {
+  const onSelectChange = (newSelectedRowKeys: React.Key[], selectedRows: UsersDataArray[]) => {
     setSelectedRowKeys(newSelectedRowKeys)
     setSelectedRowsArray(selectedRows)
   }
@@ -77,24 +70,13 @@ const MemberPage: React.FC = () => {
     <div className="w-full pr-5">
       <h1>會員篩選</h1>
       <div className="exportMember" style={{ marginBottom: 16 }}>
-        <Button
-          type="primary"
-          onClick={exportCSV}
-          disabled={!hasSelected}
-          loading={loading}
-        >
+        <Button type="primary" onClick={exportCSV} disabled={!hasSelected} loading={loading}>
           匯出會員資料
         </Button>
-        <span style={{ marginLeft: 8 }}>
-          {hasSelected ? `已選擇 ${selectedRowKeys.length} 筆會員` : ''}
-        </span>
+        <span style={{ marginLeft: 8 }}>{hasSelected ? `已選擇 ${selectedRowKeys.length} 筆會員` : ''}</span>
       </div>
       <div className="pr-5">
-        <Table
-          rowSelection={rowSelection}
-          dataSource={usersData}
-          columns={columns}
-        />
+        <Table rowSelection={rowSelection} dataSource={usersData} columns={columns} />
       </div>
     </div>
   )

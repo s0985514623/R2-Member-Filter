@@ -1,10 +1,6 @@
 import { TDataProvider } from '@/types'
 
-export const getTypeText = (
-  resource: string,
-  method: string,
-  statusText: string,
-) => {
+export const getTypeText = (resource: string, method: string, statusText: string) => {
   const getMethodText = (theMethod: string) => {
     switch (theMethod) {
       case 'get':
@@ -35,9 +31,7 @@ export const getTypeText = (
     case 'attachment-post':
       return 'Image Uploaded'
     case 'posts-post':
-      return statusText === 'Created'
-        ? `${resourceText} Created`
-        : `${resourceText}${methodText}`
+      return statusText === 'Created' ? `${resourceText} Created` : `${resourceText}${methodText}`
     default:
       return `${resourceText} ${methodText}`
   }

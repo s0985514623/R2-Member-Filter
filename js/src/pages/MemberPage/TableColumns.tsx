@@ -41,8 +41,7 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
     dataIndex: 'CompletedOders',
     key: 'CompletedOders',
     width: '20%',
-    sorter: (a, b) =>
-      (a.CompletedOders as number) - (b.CompletedOders as number),
+    sorter: (a, b) => (a.CompletedOders as number) - (b.CompletedOders as number),
   },
 
   {
@@ -59,41 +58,22 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
         })}
       </Space>
     ),
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => {
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
       const CompletedProducts = window?.ProductData?.ProductArray || []
       return (
         <div style={{ padding: 8 }}>
-          <Select
-            mode="multiple"
-            placeholder="選擇商品"
-            value={selectedKeys}
-            onChange={(values) => setSelectedKeys(values)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          >
+          <Select mode="multiple" placeholder="選擇商品" value={selectedKeys} onChange={(values) => setSelectedKeys(values)} style={{ width: 188, marginBottom: 8, display: 'block' }}>
             {CompletedProducts.map((CompletedProduct) => (
-              <Option key={CompletedProduct.productName}>
-                {CompletedProduct.productName}
-              </Option>
+              <Option key={CompletedProduct.productName}>{CompletedProduct.productName}</Option>
             ))}
           </Select>
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
+          <Button type="primary" onClick={() => confirm()} size="small" style={{ width: 90, marginRight: 8 }}>
             确定
           </Button>
           <Button
             onClick={() => clearFilters()} //TODO 錯誤在哪邊?
             size="small"
-            style={{ width: 90 }}
-          >
+            style={{ width: 90 }}>
             重置
           </Button>
         </div>
@@ -102,9 +82,7 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
 
     onFilter: (value, record) => {
       const completedProducts = record.CompletedProducts || []
-      return completedProducts.some((product) =>
-        product.productName.includes(value as string),
-      )
+      return completedProducts.some((product) => product.productName.includes(value as string))
     },
   },
   {
@@ -121,41 +99,19 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
         })}
       </Space>
     ),
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => {
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
       const CartProducts = window?.ProductData?.ProductArray || []
       return (
         <div style={{ padding: 8 }}>
-          <Select
-            mode="multiple"
-            placeholder="選擇商品"
-            value={selectedKeys}
-            onChange={(values) => setSelectedKeys(values)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          >
+          <Select mode="multiple" placeholder="選擇商品" value={selectedKeys} onChange={(values) => setSelectedKeys(values)} style={{ width: 188, marginBottom: 8, display: 'block' }}>
             {CartProducts.map((CartProduct) => (
-              <Option key={CartProduct.productName}>
-                {CartProduct.productName}
-              </Option>
+              <Option key={CartProduct.productName}>{CartProduct.productName}</Option>
             ))}
           </Select>
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
+          <Button type="primary" onClick={() => confirm()} size="small" style={{ width: 90, marginRight: 8 }}>
             确定
           </Button>
-          <Button
-            onClick={() => clearFilters()}
-            size="small"
-            style={{ width: 90 }}
-          >
+          <Button onClick={() => clearFilters()} size="small" style={{ width: 90 }}>
             重置
           </Button>
         </div>
@@ -163,9 +119,7 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
     },
     onFilter: (value, record) => {
       const CartProducts = record.CartProducts || []
-      return CartProducts.some((product) =>
-        product.productName.includes(value as string),
-      )
+      return CartProducts.some((product) => product.productName.includes(value as string))
     },
   },
 ]

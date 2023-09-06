@@ -9,13 +9,7 @@ export type TAdminAjaxArgs = {
   [key: string]: string | number | undefined
 }
 
-export const adminAjax = async ({
-  args,
-  config = undefined,
-}: {
-  args?: TAdminAjaxArgs
-  config?: AxiosRequestConfig<{ [key: string]: any }> | undefined
-}) => {
+export const adminAjax = async ({ args, config = undefined }: { args?: TAdminAjaxArgs; config?: AxiosRequestConfig<{ [key: string]: any }> | undefined }) => {
   const formData = new FormData()
 
   if (!!args) {

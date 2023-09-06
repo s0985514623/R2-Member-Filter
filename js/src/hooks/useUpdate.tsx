@@ -12,11 +12,7 @@ export const useUpdate = (options: {
     [key: string]: any
   }
   config?: AxiosRequestConfig<{ [key: string]: any }> | undefined
-  mutationOptions?: UseMutationOptions<
-    AxiosResponse,
-    AxiosError,
-    { [key: string]: any }
-  >
+  mutationOptions?: UseMutationOptions<AxiosResponse, AxiosError, { [key: string]: any }>
 }) => {
   const resource = options?.resource || 'post'
   const dataProvider = options?.dataProvider || 'wp'

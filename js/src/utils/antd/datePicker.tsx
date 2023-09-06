@@ -10,15 +10,7 @@ const range = (start: number, end: number) => {
 }
 
 export const disabledTime =
-  ({
-    type,
-    watchStartTime,
-    watchEndTime,
-  }: {
-    type: 'startTime' | 'endTime'
-    watchStartTime: Dayjs
-    watchEndTime: Dayjs
-  }): any =>
+  ({ type, watchStartTime, watchEndTime }: { type: 'startTime' | 'endTime'; watchStartTime: Dayjs; watchEndTime: Dayjs }): any =>
   () => {
     if (!watchStartTime || !watchEndTime) return {}
     const startTimeDate = watchStartTime.format('YYYY-MM-DD')
@@ -56,31 +48,18 @@ export const disabledTime =
   }
 
 export const disabledDate =
-  ({
-    type,
-    watchStartTime,
-    watchEndTime,
-  }: {
-    type: 'startTime' | 'endTime'
-    watchStartTime: Dayjs
-    watchEndTime: Dayjs
-  }): RangePickerProps['disabledDate'] =>
+  ({ type, watchStartTime, watchEndTime }: { type: 'startTime' | 'endTime'; watchStartTime: Dayjs; watchEndTime: Dayjs }): RangePickerProps['disabledDate'] =>
   (current: Dayjs) => {
     if (type === 'startTime') {
       if (!!watchEndTime) {
-        return (
-          current &&
-          current.valueOf() > watchEndTime.startOf('day').add(1, 'd').valueOf()
-        )
+        return current && current.valueOf() > watchEndTime.startOf('day').add(1, 'd').valueOf()
       }
       return false
     }
 
     if (type === 'endTime') {
       if (!!watchStartTime) {
-        return (
-          current && current.valueOf() < watchStartTime.startOf('day').valueOf()
-        )
+        return current && current.valueOf() < watchStartTime.startOf('day').valueOf()
       }
       return false
     }

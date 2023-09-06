@@ -127,7 +127,7 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
       confirm,
       clearFilters,
     }) => {
-      const CompletedProducts = window?.ProductData?.ProductArray || []
+      const CartProducts = window?.ProductData?.ProductArray || []
       return (
         <div style={{ padding: 8 }}>
           <Select
@@ -137,9 +137,9 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
             onChange={(values) => setSelectedKeys(values)}
             style={{ width: 188, marginBottom: 8, display: 'block' }}
           >
-            {CompletedProducts.map((CompletedProduct) => (
-              <Option key={CompletedProduct.productName}>
-                {CompletedProduct.productName}
+            {CartProducts.map((CartProduct) => (
+              <Option key={CartProduct.productName}>
+                {CartProduct.productName}
               </Option>
             ))}
           </Select>
@@ -162,8 +162,8 @@ export const columnsSetting: ColumnsType<UsersDataArray> = [
       )
     },
     onFilter: (value, record) => {
-      const completedProducts = record.CompletedProducts || []
-      return completedProducts.some((product) =>
+      const CartProducts = record.CartProducts || []
+      return CartProducts.some((product) =>
         product.productName.includes(value as string),
       )
     },

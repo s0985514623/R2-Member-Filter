@@ -6,6 +6,7 @@ namespace J7\WP_REACT_PLUGIN\React\Admin;
 
 use J7\WP_REACT_PLUGIN\React\Admin\Bootstrap;
 
+
 class Member extends Bootstrap
 {
 	function __construct()

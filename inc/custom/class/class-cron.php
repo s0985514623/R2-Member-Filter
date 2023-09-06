@@ -38,5 +38,5 @@ class Cron extends Bootstrap
 }
 
 //怎麼用:
-$r2 = new Cron('s0985514623');
-$r2->set_mail('s0985514623@gmail.com', '我是subject', '我是content');
+// $r2 = new Cron('s0985514623');
+// $r2->set_mail('s0985514623@gmail.com', '我是subject', '我是content');

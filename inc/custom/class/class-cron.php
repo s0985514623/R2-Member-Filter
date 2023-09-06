@@ -33,7 +33,7 @@ class Cron extends Bootstrap
 		//清除事件
 		wp_unschedule_hook($this->eventEmail . '_Cron_Hook');
 		// 安排新的事件
-		wp_schedule_single_event(time() + 3600, $this->eventEmail . '_Cron_Hook', array('data' => array($to, $subject, $content)));
+		wp_schedule_single_event(time() + 3600, $this->eventEmail . '_Cron_Hook', array($to, $subject, $content));
 	}
 }
 

@@ -35,7 +35,7 @@ class Bootstrap
 	{
 		\add_action('admin_enqueue_scripts', [$this, 'enqueue_script'], 99);
 		\add_action('wp_enqueue_scripts', [$this, 'enqueue_script'], 99);
-		\add_action('wp_footer', [$this, 'render_app']);
+		// \add_action('wp_footer', [$this, 'render_app']);
 	}
 
 	/**

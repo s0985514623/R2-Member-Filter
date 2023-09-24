@@ -34,7 +34,7 @@ class Member extends Bootstrap
 	function getMember()
 	{
 		$ProductArray = $this->getAllProduct();
-		$user_query = new \WP_User_Query(array('number' => -1,));
+		$user_query = new \WP_User_Query(array('number' => -1));
 		$users = $user_query->get_results();
 
 		$usersDataAarray = [];
@@ -54,6 +54,7 @@ class Member extends Bootstrap
 					'CompletedProducts' => $this->getCompletedProducts($userID)['CompletedProducts'],
 					// 'CartItems' => $cart_items_count,
 					'CartProducts' => $this->getCartProducts($userID),
+					// 'sessionProduct' => $this->getSessionProduct($userID),
 				);
 				// var_dump($userDate);
 				// echo '<hr>';
@@ -118,7 +119,6 @@ class Member extends Bootstrap
 		$existingCartProductIDs = [];
 		foreach ($cart_data as $data) {
 			$productID = $data['product_id'];
-			wc_get_product();
 			// 检查是否已存在相同的productID
 			if (!in_array($productID, $existingCartProductIDs) && wc_get_product($productID)) {
 				$productName = wc_get_product($productID)->get_name();
@@ -161,4 +161,31 @@ class Member extends Bootstrap
 		}
 		return $ProductArray;
 	}
+	// function getSessionProduct($userID)
+	// {
+	// 	//WC() 會自動取得當前用戶ID
+	// 	// $cart_session = \WC()->session->get('cart') ?? [];
+	// 	$session_Handler = WC()->session;
+	// 	$cart_session = isset($session_Handler) ? $session_Handler->get('cart') : [];
+
+	// 	$sessionProduct = [];
+	// 	$existingSessionProductIDs = [];
+	// 	foreach ($cart_session as $data) {
+	// 		$productID = $data['product_id'];
+	// 		// 检查是否已存在相同的productID
+	// 		if (!in_array($productID, $existingSessionProductIDs) && wc_get_product($productID)) {
+	// 			$productName = wc_get_product($productID)->get_name();
+	// 			$Product = array(
+	// 				'productName' => $productName,
+	// 				'productID' => $productID,
+	// 			);
+	// 			$sessionProduct[] = $Product;
+	// 			// 将productID添加到已存在的数组中
+	// 			$existingSessionProductIDs[] = $productID;
+	// 		}
+	// 	}
+	// 	// var_dump($CartProducts);
+	// 	$session_items_count = $sessionProduct !== [] ? count($sessionProduct) : 0;
+	// 	return $sessionProduct;
+	// }
 }

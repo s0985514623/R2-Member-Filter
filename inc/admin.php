@@ -18,15 +18,17 @@ class Bootstrap
 
 		new ShortCode($_ENV['SNAKE'] . '_shortcode');
 		new Ajax();
-		new CPT($_ENV['KEBAB'], array(
-			'post_metas' => ['meta', 'settings'],
-			'rewrite' => array(
-				'template_path' => 'test.php',
-				'slug' => 'test',
-				'var' => $_ENV['SNAKE'] . '_test',
-			),
-		));
+		// new CPT($_ENV['KEBAB'], array(
+		// 	'post_metas' => ['meta', 'settings'],
+		// 	'rewrite' => array(
+		// 		'template_path' => 'test.php',
+		// 		'slug' => 'test',
+		// 		'var' => $_ENV['SNAKE'] . '_test',
+		// 	),
+		// ));
 		new Member();
+		new Cron();
+		new userIsLogin();
 	}
 
 	public function init(): void
@@ -78,7 +80,7 @@ class Bootstrap
 			'siteUrl' => \site_url(),
 			'ajaxUrl' => \admin_url('admin-ajax.php'),
 			'ajaxNonce'  => \wp_create_nonce($_ENV['KEBAB']),
-			'userId' => \wp_get_current_user()->data->ID,
+			'userId' => \wp_get_current_user()->data->ID ?? null,
 			'postId' => $post_id,
 			'permalink' => $permalink,
 		));

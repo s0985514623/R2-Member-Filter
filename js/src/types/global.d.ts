@@ -13,8 +13,8 @@ declare global {
     checkoutUrl: string
   }
 
-  var memderData: {
-    usersDataAarray: []
+  var memberData: {
+    usersDataArray: []
   }
 }
 

@@ -23,8 +23,7 @@
 	},
 	"plugins": [
 		"react",
-		"@typescript-eslint",
-		"prettier"
+		"@typescript-eslint"
 	],
 	"rules": {
 		"@wordpress/no-unused-vars-before-return": "off",
@@ -39,6 +38,7 @@
 		"no-console": [
 			"warn"
 		],
+		"array-callback-return": "off",
 		"no-duplicate-imports": "error",
 		"linebreak-style": "off",
 		"@typescript-eslint/ban-types": "off",
@@ -49,10 +49,11 @@
 		"prettier/prettier": [
 			"error",
 			{
+				"semi": false,
 				"endOfLine": "auto",
 				"useTabs": false,
 				"tabWidth": 2,
-				"prettier-multiline-arrays-set-threshold": 1
+				"prettier-multiline-arrays-set-threshold": 4
 			}
 		],
 		"no-unused-vars": [

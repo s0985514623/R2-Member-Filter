@@ -18,8 +18,10 @@ class userIsLogin
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <div
-	class="noLoginPup flex flex-col fixed right-0 top-32 z-[1000] w-80 bg-white font-sans shadow-xl duration-300 animate__animated animate__fadeInRight">
-	<p class="flex items-center px-8 min-h-[100px] text-[#4562A8] font-semibold">請先加入會員，<br>才能加入購物車哦！
+	class="noLoginPup flex flex-col fixed right-0 top-32 z-[1000] w-80 bg-white font-sans shadow-xl duration-300 animate__animated animate__fadeInRight bg-[url('/wp-content/uploads/2023/09/購物車登入-03.png')] bg-no-repeat bg-contain bg-[right_1rem_top_0.5rem]">
+	<p class="flex items-center px-8 h-[100px] text-[#4562A8] font-semibold ">
+		請先加入會員，<br>才能加入購物車哦！
+
 	</p>
 	<a class="flex items-center justify-center w-full bg-[#4562A8] text-sm font-semibold text-white h-10 gap-2 fill-white hover:fill-[#4562A8] hover:text-[#374a6d] hover:bg-white"
 		href="<?= home_url() ?>/wp-login.php?loginSocial=google" data-plugin="nsl" data-action="connect"
@@ -30,7 +32,7 @@ class userIsLogin
 			<path
 				d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
 		</svg>
-		</svg> Google 登入
+		Google 登入
 	</a>
 	<div class="closeBtn absolute top-4 right-4 cursor-pointer"><svg class="fill-[#374a6d]"
 			xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 384 512">

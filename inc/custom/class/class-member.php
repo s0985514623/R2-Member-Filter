@@ -27,17 +27,59 @@ class Member extends Bootstrap
 	// 頁面內容
 	function r2_notify_page_content()
 	{
+		// $args = array(
+		// 	'post_type' => 'product',
+		// 	'posts_per_page' => -1, // 获取所有商品
+		// );
+		// $query = new \WP_Query($args);
+		// if ($query->have_posts()) {
+		// 	while ($query->have_posts()) {
+		// 		$query->the_post();
+		// 		global $product;
+		// 		if ($product->is_type('variable')) {
+		// 			// 獲取變體類型
+		// 			$variations = $product->get_available_variations();
+		// 			foreach ($variations as $variation) {
+		// 				// 獲取變體屬性
+
+		// 				$variationAttributes = wc_get_formatted_variation($variation["attributes"], true, false);
+		// 				echo $variationAttributes . '<br>';
+		// 			}
+		// 		}
+		// 	}
+		// 	wp_reset_postdata(); // 重置查询
+		// }
+
 		echo '<div id="' . $_ENV['KEBAB'] . '" class="my-app"></div>';
 		$this->getMember();
+		// $this->CustomEmailTest();
 	}
 
+	// 	function CustomEmailTest()
+	// 	{
+	// $jsonData = \get_option('thwec_template_settings')["templates"]["date_mail"]["template_data"];
+	// $phpData = json_decode($jsonData, true);
+	// // echo $phpData["contents"];
+	// echo '<pre>';
+	// var_dump($jsonData);
+	// echo '</pre>';
+	// 		$jsonData = \get_option('thwec_template_settings')["templates"]["date_mail"]["template_data"];
+	// 		$phpData = json_decode($jsonData, true);
+	// 		ob_start();
+	// 		$content =  '';
+	//
+	// 		$content .=  ob_get_clean();
+
+	// 		$headers = array('Content-Type: text/html; charset=UTF-8');
+	// 		\wp_mail('s0985514623@gmail.com', 'test', $content, $headers);
+	// 	}
 	function getMember()
 	{
 		$ProductArray = $this->getAllProduct();
 		$user_query = new \WP_User_Query(array('number' => -1));
 		$users = $user_query->get_results();
 
-		$usersDataAarray = [];
+		$usersDataArray = [];
 		// 遍历用户数据并输出
 		if (!empty($users)) {
 			$key = 0;
@@ -47,26 +89,26 @@ class Member extends Bootstrap
 
 				$userDate = array(
 					'key' => $key++,
-					'Username' => $user->display_name,
-					'UserID' => $userID,
-					'Email' => $user->user_email,
-					'CompletedOders' => $this->getCompletedProducts($userID)['order_count'],
-					'CompletedProducts' => $this->getCompletedProducts($userID)['CompletedProducts'],
+					'userName' => $user->display_name,
+					'userID' => $userID,
+					'email' => $user->user_email,
+					'completedOrders' => $this->getCompletedProducts($userID)['orderCount'],
+					'completedProducts' => $this->getCompletedProducts($userID)['completedProducts'],
 					// 'CartItems' => $cart_items_count,
-					'CartProducts' => $this->getCartProducts($userID),
+					'cartProducts' => $this->getCartProducts($userID),
 					// 'sessionProduct' => $this->getSessionProduct($userID),
 				);
 				// var_dump($userDate);
 				// echo '<hr>';
-				$usersDataAarray[] = $userDate;
+				$usersDataArray[] = $userDate;
 			}
 		}
 
-		\wp_localize_script($_ENV['KEBAB'], 'memderData', array(
-			'usersDataAarray' => $usersDataAarray,
+		\wp_localize_script($_ENV['KEBAB'], 'memberData', array(
+			'usersDataArray' => $usersDataArray,
 		));
-		\wp_localize_script($_ENV['KEBAB'], 'ProductData', array(
-			'ProductArray' => $ProductArray,
+		\wp_localize_script($_ENV['KEBAB'], 'productData', array(
+			'productArray' => $ProductArray,
 		));
 	}
 	function getCompletedProducts($userID)
@@ -86,17 +128,33 @@ class Member extends Bootstrap
 			foreach ($orderObject->get_items() as $item_id) {
 				$item = new \WC_Order_Item_Product($item_id);
 				$productID = $item->get_product_id();
+				$variationID = $item->get_variation_id(); //如果沒有會返回0
 
-				// 检查是否已存在相同的productID
-				if (!in_array($productID, $existingProductIDs) && wc_get_product($productID)) {
-					$productName = wc_get_product($productID)->get_name();
-					$Product = array(
-						'productName' => $productName,
-						'productID' => $productID,
-					);
-					$CompletedProducts[] = $Product;
-					// 将productID添加到已存在的数组中
-					$existingProductIDs[] = $productID;
+				if ($variationID) {
+					//如果是變體商品的處理邏輯
+					if (!in_array($variationID, $existingProductIDs) && wc_get_product($variationID)) {
+						$productName = wc_get_product($variationID)->get_name();
+
+						$CompletedProducts[] = array(
+							'productName' => $productName,
+							'productID' => $variationID,
+						);;
+						// 将productID添加到已存在的数组中
+						$existingProductIDs[] = $variationID;
+					}
+				} else {
+					//如果是一般商品的處理邏輯
+					// 检查是否已存在相同的productID
+					if (!in_array($productID, $existingProductIDs) && wc_get_product($productID)) {
+						$productName = wc_get_product($productID)->get_name();
+
+						$CompletedProducts[] = array(
+							'productName' => $productName,
+							'productID' => $productID,
+						);;
+						// 将productID添加到已存在的数组中
+						$existingProductIDs[] = $productID;
+					}
 				}
 			}
 		}
@@ -104,8 +162,8 @@ class Member extends Bootstrap
 		//取得訂單總數
 		$order_count = count($orders);
 		$result = array(
-			'CompletedProducts' => $CompletedProducts,
-			'order_count' => $order_count,
+			'completedProducts' => $CompletedProducts,
+			'orderCount' => $order_count,
 		);
 		return $result;
 	}
@@ -119,16 +177,32 @@ class Member extends Bootstrap
 		$existingCartProductIDs = [];
 		foreach ($cart_data as $data) {
 			$productID = $data['product_id'];
-			// 检查是否已存在相同的productID
-			if (!in_array($productID, $existingCartProductIDs) && wc_get_product($productID)) {
-				$productName = wc_get_product($productID)->get_name();
-				$Product = array(
-					'productName' => $productName,
-					'productID' => $productID,
-				);
-				$CartProducts[] = $Product;
-				// 将productID添加到已存在的数组中
-				$existingCartProductIDs[] = $productID;
+			$variationID = $data['variation_id'];
+			if ($variationID) {
+				//如果是變體商品的處理邏輯
+				if (!in_array($variationID, $existingCartProductIDs) && wc_get_product($variationID)) {
+					$productName = wc_get_product($variationID)->get_name();
+
+					$CartProducts[] = array(
+						'productName' => $productName,
+						'productID' => $variationID,
+					);;
+					// 将productID添加到已存在的数组中
+					$existingCartProductIDs[] = $variationID;
+				}
+			} else {
+				//如果是一般商品的處理邏輯
+				// 检查是否已存在相同的productID
+				if (!in_array($productID, $existingCartProductIDs) && wc_get_product($productID)) {
+					$productName = wc_get_product($productID)->get_name();
+
+					$CartProducts[] = array(
+						'productName' => $productName,
+						'productID' => $productID,
+					);;
+					// 将productID添加到已存在的数组中
+					$existingCartProductIDs[] = $productID;
+				}
 			}
 		}
 		// var_dump($CartProducts);
@@ -149,13 +223,23 @@ class Member extends Bootstrap
 			while ($query->have_posts()) {
 				$query->the_post();
 				global $product;
-
-				// 现在您可以访问每个商品的信息
-				$productName = $product->get_title();
-				$product = array(
-					'productName' => $productName,
-				);
-				$ProductArray[] = $product;
+				//增加變體商品判斷
+				if ($product->is_type('variable')) {
+					$variations = $product->get_available_variations();
+					foreach ($variations as $variation) {
+						// 獲取變體屬性
+						$variationAttributes = wc_get_formatted_variation($variation["attributes"], true, false);
+						$productName = $product->get_title() . ' - ' . $variationAttributes;
+						$ProductArray[] = array(
+							'productName' => $productName,
+						);
+					}
+				} else {
+					$productName = $product->get_title();
+					$ProductArray[] = array(
+						'productName' => $productName,
+					);
+				}
 			}
 			wp_reset_postdata(); // 重置查询
 		}

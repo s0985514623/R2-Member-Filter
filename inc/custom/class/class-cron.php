@@ -13,14 +13,17 @@ use J7\WP_REACT_PLUGIN\React\Admin\Bootstrap;
 class Cron extends Bootstrap
 {
 	private $eventName; //已棄用
+
 	function __construct()
 	{
 		//註冊Cron事件
-		\add_action('r2_repeatingCron', array($this, 'repeatingCronCallBack'), 10, 3);
+		\add_action('r2_repeatingCron', array($this, 'repeatingCronCallBack'), 10);
 		\add_action('r2_oneCron', array($this, 'oneCronCallBack'), 10, 3);
+
 		//在會員篩選頁面加入子頁面
 		\add_action('admin_menu', array($this, 'cron_setting_submenu_page'));
 		// \add_action('woocommerce_add_to_cart', array($this, 'woocommerce_add_to_cart'), 10);
+
 	}
 	//cron設定子頁面
 	function cron_setting_submenu_page()
@@ -42,6 +45,9 @@ class Cron extends Bootstrap
 			update_option('r2_cartNotify_isSet', $cartNotify_isSet); // 更新選項
 			$r2_scheduleTime = sanitize_text_field($_POST['r2_scheduleTime']); // 獲取表單提交的值
 			update_option('r2_scheduleTime', $r2_scheduleTime); // 更新選項
+			//測試用
+			$r2_test_mail = sanitize_text_field($_POST['r2_test_mail']); // 獲取表單提交的值
+			update_option('r2_test_mail', $r2_test_mail); // 更新選項
 			echo '<div class="updated"><p>設置已保存。</p></div>';
 
 			if ($cartNotify_isSet == 'on') {
@@ -54,21 +60,17 @@ class Cron extends Bootstrap
 		}
 
 ?>
-<div class="pageWrap">
-	<h2>購物車未結提醒設定</h2>
-	<form method="post" action="">
-		<div class="pageSection" style="display: flex;gap:10px ;margin:10px 0px;">
-			<!-- <input type="checkbox" id="r2_cartNotify_isSet" name="r2_cartNotify_isSet" />
-					<label for="r2_cartNotify_isSet">是否啟用未結提醒</label> -->
-
-			<div><span style="display:block; width: 180px;">是否啟用未結提醒</span></div>
-			<div><input type="checkbox" name="r2_cartNotify_isSet" id="r2_cartNotify_isSet"
-					<?php echo (get_option('r2_cartNotify_isSet', 1) === 'on') ? 'checked' : '' ?>></div>
-		</div>
-		<div class="pageSection" style="display: flex;gap:10px">
-			<div><span style="display:block; width: 180px;">要每隔多久檢查一次：</span></div>
-			<select name="r2_scheduleTime" id="r2_scheduleTime">
-				<?php
+		<div class="pageWrap">
+			<h2>購物車未結提醒設定</h2>
+			<form method="post" action="">
+				<div class="pageSection" style="display: flex;gap:10px ;margin:10px 0px;">
+					<div><span style="display:block; width: 180px;">是否啟用未結提醒</span></div>
+					<div><input type="checkbox" name="r2_cartNotify_isSet" id="r2_cartNotify_isSet" <?php echo (get_option('r2_cartNotify_isSet', 1) === 'on') ? 'checked' : '' ?>></div>
+				</div>
+				<div class="pageSection" style="display: flex;gap:10px">
+					<div><span style="display:block; width: 180px;">要每隔多久檢查一次：</span></div>
+					<select name="r2_scheduleTime" id="r2_scheduleTime">
+						<?php
 						$argsArray = array(
 							'hourly' => '每小時',
 							'twicedaily' => '每天兩次',
@@ -79,42 +81,47 @@ class Cron extends Bootstrap
 						);
 						foreach ($argsArray as $key => $value) {
 						?>
-				<option value="<?= $key ?>"
-					<?php echo (get_option('r2_scheduleTime', 1) === $key) ? 'selected' : '' ?>><?= $value ?>
-				</option>
-				<?php
+							<option value="<?= $key ?>" <?php echo (get_option('r2_scheduleTime', 1) === $key) ? 'selected' : '' ?>><?= $value ?>
+							</option>
+						<?php
 						}
 						?>
-			</select>
+					</select>
+				</div>
+				<div class="pageSection" style="display: flex;gap:10px ;margin:10px 0px;">
+					<div><span style="display:block; width: 180px;">測試信箱</span></div>
+					<div><input type="text" name="r2_test_mail" value="<?php echo esc_attr(get_option('r2_test_mail', 1)); ?>">
+						<span>給購物車未結通知測試使用，輸入使用者信箱已查詢當前使用者是否有未結商品，留空為取得全部使用者</span>
+					</div>
+				</div>
+				<div class="pageSection">
+					<button type="submit" name="r2_cart_notify_save" class="button-primary">保存</button>
+					<!-- 添加保存按钮 -->
+				</div>
+			</form>
 		</div>
-		<div class="pageSection">
-			<button type="submit" name="r2_cart_notify_save" class="button-primary">保存</button>
-			<!-- 添加保存按钮 -->
-		</div>
-	</form>
-</div>
 <?php
 	}
+
 	//每固定時間觸發檢查
 	public function setScheduleEvent($isSet = false, $scheduleTime = 'daily')
 	{
 		//如果有啟用才註冊事件
 		if ($isSet) {
-
 			if (!wp_next_scheduled('r2_repeatingCron')) {
-				wp_schedule_event(time(), $scheduleTime, 'r2_repeatingCron');
+				\wp_reschedule_event(time(), $scheduleTime, 'r2_repeatingCron');
 			}
 		} else {
 			//清除事件
-			\wp_unschedule_hook('r2_repeatingCron');
+			wp_unschedule_hook('r2_repeatingCron', true);
 		}
 	}
 	//
 	function repeatingCronCallBack()
 	{
-		$usersDataAarray = $this->getMember();
-		if ($usersDataAarray) {
-			foreach ($usersDataAarray as $usersData) {
+		$usersDataArray = $this->getMember();
+		if ($usersDataArray) {
+			foreach ($usersDataArray as $usersData) {
 				# 如果有商品在購物車內則加入單次性事件=>寄信
 				if ($usersData['CartProducts']) {
 					# code...
@@ -129,7 +136,7 @@ class Cron extends Bootstrap
 						'subject' => '提醒您購物車中有課程尚未結帳唷',
 						'content' => '提醒您尚有：<br>' . $content . '等課程未結帳唷',
 					);
-					\wp_schedule_single_event(time() + 60, 'r2_oneCron', $mailArgs, true);
+					\wp_schedule_single_event(time() + 300, 'r2_oneCron', $mailArgs, true);
 				}
 			}
 		}
@@ -144,14 +151,16 @@ class Cron extends Bootstrap
 	//取得所有會員資料
 	function getMember()
 	{
+		//如果r2_test_mail為空則取得全部使用者，否則取得符合r2_test_mail的使用者
+		get_option('r2_test_mail', 1) === '' ? $args = array('number' => -1, 'role__in' => array('customer', 'subscriber')) : $args = array('number' => -1, 'search' => get_option('r2_test_mail', 1), 'search_columns' => array('user_email'));
 		//測試用
-		$args = array('number' => -1, 'search' => '87', 'search_columns' => array('id'));
+		// $args = array('number' => -1, 'search' => '87', 'search_columns' => array('id'));
 		//正式用=>取得客戶與訂閱者
 		// $args = array('number' => -1, 'role__in' => array('customer', 'subscriber'));
 		$user_query = new \WP_User_Query($args);
 		$users = $user_query->get_results();
 
-		$usersDataAarray = [];
+		$usersDataArray = [];
 		// 遍历用户数据并输出
 		if (!empty($users)) {
 			$key = 0;
@@ -169,10 +178,10 @@ class Cron extends Bootstrap
 				);
 				// var_dump($userDate);
 				// echo '<hr>';
-				$usersDataAarray[] = $userDate;
+				$usersDataArray[] = $userDate;
 			}
 		}
-		return $usersDataAarray;
+		return $usersDataArray;
 	}
 
 	//取得購物車未結

@@ -27,8 +27,11 @@ class Bootstrap
 		// 	),
 		// ));
 		new Member();
-		new Cron();
+		// new Cron();
 		new userIsLogin();
+		new CronNew();
+		// $CronNew = CronNew::getInstance();
+		// $CronNew->initCron();
 	}
 
 	public function init(): void

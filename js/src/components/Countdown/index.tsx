@@ -12,7 +12,8 @@ const CountdownDigit: FC<{ countdownProps: CountdownRenderProps }> = ({ countdow
       className="CountdownDigit grid gap-x-2 gap-y-4"
       style={{
         gridTemplateColumns: `repeat(${dayLength + 6}, minmax(0, 1fr))`,
-      }}>
+      }}
+    >
       {dayArr.map((number, index) => (
         <div key={`day-${index}`} className="ps-countdown-digit">
           {number}
@@ -29,7 +30,8 @@ const CountdownDigit: FC<{ countdownProps: CountdownRenderProps }> = ({ countdow
         className="text-center text-xs"
         style={{
           gridColumn: `span ${dayLength} / span ${dayLength}`,
-        }}>
+        }}
+      >
         Days
       </div>
       <div className="col-span-2 text-center text-xs">Hours</div>

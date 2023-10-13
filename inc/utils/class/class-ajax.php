@@ -11,11 +11,10 @@ class Ajax
 
 	const GET_POST_META_ACTION = 'handle_get_post_meta';
 	const UPDATE_POST_META_ACTION = 'handle_update_post_meta';
-
-
+	const SET_CRON_EMAIL = 'handle_set_cron_email';
 	function __construct()
 	{
-		foreach ([self::GET_POST_META_ACTION, self::UPDATE_POST_META_ACTION] as $action) {
+		foreach ([self::GET_POST_META_ACTION, self::UPDATE_POST_META_ACTION, self::SET_CRON_EMAIL] as $action) {
 			\add_action('wp_ajax_' . $action, [$this,  $action . '_callback']);
 			\add_action('wp_ajax_nopriv_' . $action, [$this, $action . '_callback']);
 		}
@@ -65,6 +64,42 @@ class Ajax
 			]
 		);
 
+		\wp_send_json($return);
+
+		\wp_die();
+	}
+
+	public function handle_set_cron_email_callback()
+	{
+		// Security check
+		\check_ajax_referer($_ENV['KEBAB'], 'nonce');
+		$subject = \sanitize_text_field($_POST['subject'] ?? '');
+		$userEmail = \sanitize_text_field($_POST['userEmail'] ?? ''); //array
+		$date = \sanitize_text_field($_POST['date'] ?? ''); //date
+		$content = \sanitize_text_field($_POST['content'] ?? ''); //html
+
+		CronNew::set_Manually_Mail($subject, $userEmail, $date, $content);
+
+		// $adminEmail = \get_option('admin_email');
+		// $headers = array(
+		// 	'Content-Type: text/html; charset=UTF-8',
+		// 	'cc:' . $userEmail . ''
+		// );
+		// \wp_mail($adminEmail, 'test', $content, $headers);
+
+
+		$update_result = array(
+			'userEmail' => $userEmail,
+			'date' => $date,
+			'content' => $content
+		);
+
+		$return = array(
+			'message'  => 'success',
+			'data'       => [
+				'update_result' => $update_result,
+			]
+		);
 		\wp_send_json($return);
 
 		\wp_die();

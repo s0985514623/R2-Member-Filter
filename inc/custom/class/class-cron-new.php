@@ -24,6 +24,8 @@ class CronNew extends Bootstrap
 		}
 		//在會員篩選頁面加入子頁面
 		\add_action('admin_menu', array($this, 'cron_setting_submenu_page'));
+		//註冊一個手動寄信的cron事件
+		\add_action('r2_Set_Manually', array($this, 'set_Manually_CronExec'), 10, 3);
 	}
 	//cron設定子頁面
 	function cron_setting_submenu_page()
@@ -134,6 +136,33 @@ class CronNew extends Bootstrap
 		}
 		// \wp_schedule_single_event(time() + 3600, $userID . '_Cron_Hook', $mailArgs, true);
 	}
+
+	//手動寄信function
+	static function set_Manually_Mail($subject, $userEmail, $date, $content)
+	{
+		$mailArgs = array(
+			'userEmail' => $userEmail,
+			'subject' => $subject,
+			'content' => $content,
+		);
+		$dateTime = new \DateTime($date, wp_timezone());
+		$timestamp = $dateTime->getTimestamp();
+		if (!\wp_next_scheduled('r2_Set_Manually', $mailArgs)) {
+			\wp_schedule_single_event($timestamp, 'r2_Set_Manually', $mailArgs, true);
+		}
+	}
+
+	//手動寄信Cron 回調
+	public function set_Manually_CronExec($userEmail = "s0985514623@gmail.com", $subject = "課前通知", $content = "testContent")
+	{
+		$adminEmail = \get_option('admin_email');
+		$headers = array(
+			'Content-Type: text/html; charset=UTF-8',
+			'Bcc:' . $userEmail . ''
+		);
+		\wp_mail($adminEmail, $subject, $content, $headers);
+	}
+
 	//單除拉出清除事件方法
 	static function clear_cron($userID)
 	{

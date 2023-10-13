@@ -52,8 +52,8 @@
 				"semi": false,
 				"endOfLine": "auto",
 				"useTabs": false,
-				"tabWidth": 2,
-				"prettier-multiline-arrays-set-threshold": 4
+				"tabWidth": 4,
+				"prettier-multiline-arrays-set-threshold": 1
 			}
 		],
 		"no-unused-vars": [

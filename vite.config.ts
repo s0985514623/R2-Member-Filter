@@ -5,14 +5,14 @@ import alias from '@rollup/plugin-alias'
 import path from 'path'
 
 export default create_config('js/src/main.tsx', 'js/dist', {
-  plugins: [
-    alias(),
-    react(),
-    tsconfigPaths(),
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'js/src'),
+    plugins: [
+        alias(),
+        react(),
+        tsconfigPaths(),
+    ],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'js/src'),
+        },
     },
-  },
 })

@@ -39,6 +39,7 @@ class CronNew extends Bootstrap
 			array($this, 'cron_setting_callback') // 回调函数
 		);
 	}
+	//TODO 有空在優化這個區塊，使用可自由增加的方式
 	function cron_setting_callback()
 	{
 		// 如果用戶點擊了保存按鈕，則更新選項
@@ -96,7 +97,7 @@ class CronNew extends Bootstrap
 				</div>
 			</form>
 		</div>
-<?php
+		<?php
 	}
 	function cartProducts_CronExec($to, $subject, $content)
 	{
@@ -104,7 +105,10 @@ class CronNew extends Bootstrap
 		\wp_mail($to, $subject, $content, $headers);
 	}
 
-	//主要寄信功能function
+	/**
+	 * 主要寄信功能function
+	 * 帶入使用者ID與新加入購物車的商品ID
+	 */
 	static function set_mail($userID, $product_id)
 	{
 		//先清除事件後再加入新事件
@@ -112,18 +116,31 @@ class CronNew extends Bootstrap
 
 		//取得使用者資料
 		$usersDataArray = self::getMember($userID);
-		$content = '';
+		//取得使用者名稱
+		$UserName = $usersDataArray['UserName'];
+		//取得現有購物車商品
 		$CartProducts = $usersDataArray['CartProducts'];
-		foreach ($CartProducts as $Products) {
-			$productsName = $Products['productName'];
-			$content = $content . $productsName . '<br>';
-		}
-		//取得剛加入購物車的商品
-		$content = $content . wc_get_product($product_id)->get_name() . '<br>';
+		//取得新加入購物車商品名稱
+		$newProduct = wc_get_product($product_id)->get_name();
+		//取得新加入購物車商品圖片(只取得路徑而不是整張圖片)
+		$newProductImage = wp_get_attachment_url(absint(wc_get_product($product_id)->get_image_id()));
+		//將新加入購物車商品加入購物車商品陣列
+		$CartProducts[] = array(
+			'productName' => $newProduct,
+			'productID' => $product_id,
+			'productImage' => $newProductImage,
+		);
+
+		//把外部變數帶入function
+		self::Send_Content($CartProducts, $UserName);
+		//處理Mail template
+		ob_start();
+		include plugin_dir_path(__FILE__) . '../../templates/reminder-add-to-cart.php';
+		$content = ob_get_clean();
 		$mailArgs = array(
 			'to' => $usersDataArray['Email'],
 			'subject' => '提醒您購物車中有課程尚未結帳唷',
-			'content' => '提醒您尚有：<br>' . $content . '等課程未結帳唷',
+			'content' => $content,
 		);
 
 		//取得發信時間=>跑5次
@@ -137,13 +154,65 @@ class CronNew extends Bootstrap
 		// \wp_schedule_single_event(time() + 3600, $userID . '_Cron_Hook', $mailArgs, true);
 	}
 
-	//手動寄信function
-	static function set_Manually_Mail($subject, $userEmail, $date, $content)
+	//自定義信件內容
+	static function Send_Content($CartProducts, $UserName)
 	{
+		//插入自定義內容在woocommerce_email中
+		add_action('custom_hook_name', function () use ($CartProducts) {
+			foreach ($CartProducts as $CartProduct) {
+
+		?>
+				<div style="display:flex;align-items: center;gap: 10px;">
+					<div style="width:20%"><img style="width:100%" src="<?= $CartProduct['productImage'] ?>" alt="">
+					</div>
+					<span style="width:80%;text-align: left;"><?= $CartProduct['productName'] ?></span>
+				</div>
+			<?php
+				# code...
+			}
+		}, 5);
+		//插入自定義內容在woocommerce_email中
+		add_action('custom_customer_details', function () use ($UserName) {
+			?>
+			<span><?= $UserName ?></span>
+<?php
+		}, 5);
+	}
+
+	//手動寄信function
+	static function set_Manually_Mail($subject, $userEmail, $date, $content, $template)
+	{
+		//插入自定義內容在woocommerce_email中
+		add_action('custom_hook_name', function () use ($content) {
+			echo '<div style="text-align: left;padding:15px;">' . $content . '</div>';
+		}, 5);
+		//選擇要發送的範本
+		switch ($template) {
+			case 'courses_info':
+				ob_start();
+				include plugin_dir_path(__FILE__) . '../../templates/courses_info.php';
+				$fxnContent = ob_get_clean();
+				break;
+			case 'template1':
+				ob_start();
+				include plugin_dir_path(__FILE__) . '../../templates/template_1.php';
+				$fxnContent = ob_get_clean();
+				break;
+			case 'template2':
+				ob_start();
+				include plugin_dir_path(__FILE__) . '../../templates/template_2.php';
+				$fxnContent = ob_get_clean();
+				break;
+			default:
+				ob_start();
+				include plugin_dir_path(__FILE__) . '../../templates/courses_info.php';
+				$fxnContent = ob_get_clean();
+		}
+
 		$mailArgs = array(
 			'userEmail' => $userEmail,
 			'subject' => $subject,
-			'content' => $content,
+			'content' => $fxnContent,
 		);
 		$dateTime = new \DateTime($date, wp_timezone());
 		$timestamp = $dateTime->getTimestamp();
@@ -204,10 +273,14 @@ class CronNew extends Bootstrap
 			$productID = $data['product_id'];
 			// 检查是否已存在相同的productID
 			if (!in_array($productID, $existingCartProductIDs) && wc_get_product($productID)) {
+				//取得產品名稱
 				$productName = wc_get_product($productID)->get_name();
+				//取得產品圖片
+				$productImage = wp_get_attachment_url(absint(wc_get_product($productID)->get_image_id()));
 				$CartProducts[] = array(
 					'productName' => $productName,
 					'productID' => $productID,
+					'productImage' => $productImage,
 				);
 				// 将productID添加到已存在的数组中
 				$existingCartProductIDs[] = $productID;

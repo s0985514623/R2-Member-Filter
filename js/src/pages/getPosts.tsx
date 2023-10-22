@@ -4,60 +4,60 @@ import defaultImage from '@/assets/images/defaultImage.jpg'
 import { TPost, TImage } from '@/types'
 
 const GetPostsPage = () => {
-  const postsResult = useMany({
-    resource: 'posts',
-    dataProvider: 'wp',
-    queryOptions: {
-      enabled: true,
-    },
-  })
+    const postsResult = useMany({
+        resource: 'posts',
+        dataProvider: 'wp',
+        queryOptions: {
+            enabled: true,
+        },
+    })
 
-  const posts = (postsResult?.data?.data ?? []) as TPost[]
-  console.log('⭐  GetPostsPage  posts', posts)
+    const posts = (postsResult?.data?.data ?? []) as TPost[]
+    console.log('⭐  GetPostsPage  posts', posts)
 
-  const featureImgIds = !!posts ? posts.map((post) => post?.featured_media) : []
-  const uniqueFeatureImgIds = Array.from(new Set(featureImgIds))
+    const featureImgIds = !!posts ? posts.map((post) => post?.featured_media) : []
+    const uniqueFeatureImgIds = Array.from(new Set(featureImgIds))
 
-  const imagesResult = useMany({
-    resource: 'media',
-    dataProvider: 'wp',
-    args: {
-      include: uniqueFeatureImgIds,
-    },
-    queryOptions: {
-      enabled: (!!posts && posts.length > 0) || false,
-    },
-  })
+    const imagesResult = useMany({
+        resource: 'media',
+        dataProvider: 'wp',
+        args: {
+            include: uniqueFeatureImgIds,
+        },
+        queryOptions: {
+            enabled: (!!posts && posts.length > 0) || false,
+        },
+    })
 
-  const images = (imagesResult?.data?.data ?? []) as TImage[]
+    const images = (imagesResult?.data?.data ?? []) as TImage[]
 
-  return (
-    <>
-      {!!posts ? (
+    return (
         <>
-          <div className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 px-4 my-4">
-            {posts.map((post) => {
-              const image = images?.find((theImage) => theImage?.id === post?.featured_media)
-              const title = post?.title?.rendered || ''
-              const id = post?.id || ''
+            {!!posts ? (
+                <>
+                    <div className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 px-4 my-4">
+                        {posts.map((post) => {
+                            const image = images?.find((theImage) => theImage?.id === post?.featured_media)
+                            const title = post?.title?.rendered || ''
+                            const id = post?.id || ''
 
-              return (
-                <div key={id} className="border border-solid border-gray-300 rounded-xl overflow-hidden aspect-[3/4]">
-                  <img alt={title} src={image?.src || defaultImage} className="w-full" />
-                  <div className="p-4">
-                    <h2 className="text-xl">{title}</h2>
-                    <div>{renderHTML(post?.content?.rendered as string)}</div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+                            return (
+                                <div key={id} className="border border-solid border-gray-300 rounded-xl overflow-hidden aspect-[3/4]">
+                                    <img alt={title} src={image?.src || defaultImage} className="w-full" />
+                                    <div className="p-4">
+                                        <h2 className="text-xl">{title}</h2>
+                                        <div>{renderHTML(post?.content?.rendered as string)}</div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </>
+            ) : (
+                <>No Posts</>
+            )}
         </>
-      ) : (
-        <>No Posts</>
-      )}
-    </>
-  )
+    )
 }
 
 export default GetPostsPage

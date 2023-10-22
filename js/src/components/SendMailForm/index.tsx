@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Collapse, Form, Button, DatePicker, Select, Input } from 'antd'
 import { Editor } from '@tinymce/tinymce-react'
 import { nanoid } from 'nanoid'
@@ -7,23 +7,30 @@ import { useSendMail } from '@/hooks'
 
 const { Option } = Select
 const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRowsArray }) => {
+    const [
+        editorValue,
+        setEditorValue,
+    ] = useState('')
+    const editorRef = useRef(null)
     const [form] = Form.useForm()
     const { sendMail, isLoading } = useSendMail()
-
     const handleOnFinish = async (values: any) => {
         const subject = values?.emailSubject
         const date = values?.sendDate?.format('YYYY-MM-DD HH:mm:ss')
         const content = values?.sendContent?.level?.content
+        const content2 = editorRef?.current
         const userEmail = values?.userEmail
+        const template = values?.template
         const data = {
             subject,
             date,
             content,
+            content2,
             userEmail,
+            template,
             form,
         }
-
-        // console.log(data)
+        console.log('🚀 ~ data:', data)
 
         //呼叫AJAX寄信
 
@@ -56,12 +63,25 @@ const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRows
                 <Form.Item label="選擇寄送時間" name="sendDate">
                     <DatePicker showTime placeholder="選擇時間" />
                 </Form.Item>
+                <Form.Item label="選擇信件範本" name="template">
+                    <Select
+                        defaultValue="courses_info"
+                        options={[
+                            { value: 'courses_info', label: 'courses_info' },
+                            { value: 'template1', label: 'template1' },
+                            { value: 'template2', label: 'template2' },
+                        ]}
+                    />
+                </Form.Item>
                 <Form.Item label="發送內容" name="sendContent">
                     <Editor
-                        apiKey="95dfajm3xk38n0a22qynp9chl156bke7lpgovnenm04r8glu"
-                        initialValue=""
+                        ref={editorRef}
+                        apiKey={import.meta.env.VITE_TINY_KEY}
+                        value={editorValue}
+                        onEditorChange={(newValue, _editor) => {
+                            setEditorValue(newValue)
+                        }}
                         init={{
-                            height: 200,
                             menubar: false,
                             toolbar: 'undo redo | formatSelect | ' + 'bold italic forecolor backcolor | alignleft aligncenter ' + 'alignright alignjustify | bullist numlist outdent indent | ' + 'removeformat | help',
                             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',

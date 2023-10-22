@@ -1,3 +1,3 @@
 export type TUsers = {
-  id: number | null
+    id: number | null
 }

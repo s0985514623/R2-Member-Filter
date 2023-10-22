@@ -8,6 +8,7 @@ type TProps = {
     date: string
     content: string
     userEmail: string[]
+    template: string
     form: FormInstance
 }
 
@@ -23,6 +24,7 @@ export const useSendMail = () => {
                 date: props.date,
                 content: props.content,
                 userEmail: props.userEmail,
+                template: props.template,
             },
             {
                 onSuccess: (data) => {

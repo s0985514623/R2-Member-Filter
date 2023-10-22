@@ -3,7 +3,7 @@ export * from './custom'
 export * from './dataProvider'
 
 export type TConstant<T> = {
-  label: string
-  value: T
-  color?: string
+    label: string
+    value: T
+    color?: string
 }

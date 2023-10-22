@@ -69,6 +69,7 @@ class Ajax
 		\wp_die();
 	}
 
+	//AJAX手動寄信功能
 	public function handle_set_cron_email_callback()
 	{
 		// Security check
@@ -76,9 +77,10 @@ class Ajax
 		$subject = \sanitize_text_field($_POST['subject'] ?? '');
 		$userEmail = \sanitize_text_field($_POST['userEmail'] ?? ''); //array
 		$date = \sanitize_text_field($_POST['date'] ?? ''); //date
-		$content = \sanitize_text_field($_POST['content'] ?? ''); //html
-
-		CronNew::set_Manually_Mail($subject, $userEmail, $date, $content);
+		$content = ($_POST['content'] ?? ''); //html
+		//接收要發送哪一個範本
+		$template = \sanitize_text_field($_POST['template'] ?? ''); //string
+		CronNew::set_Manually_Mail($subject, $userEmail, $date, $content, $template);
 
 		// $adminEmail = \get_option('admin_email');
 		// $headers = array(
@@ -91,7 +93,8 @@ class Ajax
 		$update_result = array(
 			'userEmail' => $userEmail,
 			'date' => $date,
-			'content' => $content
+			'content' => $content,
+			'template' => $template
 		);
 
 		$return = array(

@@ -124,11 +124,20 @@ class CronNew extends Bootstrap
 		$newProduct = wc_get_product($product_id)->get_name();
 		//取得新加入購物車商品圖片(只取得路徑而不是整張圖片)
 		$newProductImage = wp_get_attachment_url(absint(wc_get_product($product_id)->get_image_id()));
+		//取得產品短介
+		$newProductShortDescription = wc_get_product($product_id)->get_short_description();
+		//取得產品價錢
+		$newProductPrice = floatval(wc_get_product($product_id)->get_price());
+		//取得商品連結
+		$newProductLink = wc_get_product($product_id)->get_permalink();
 		//將新加入購物車商品加入購物車商品陣列
 		$CartProducts[] = array(
 			'productName' => $newProduct,
 			'productID' => $product_id,
 			'productImage' => $newProductImage,
+			'productShortDescription' => $newProductShortDescription,
+			'productPrice' => $newProductPrice,
+			'productLink' => $newProductLink,
 		);
 
 		//把外部變數帶入function
@@ -162,10 +171,20 @@ class CronNew extends Bootstrap
 			foreach ($CartProducts as $CartProduct) {
 
 		?>
-				<div style="display:flex;align-items: center;gap: 10px;">
-					<div style="width:20%"><img style="width:100%" src="<?= $CartProduct['productImage'] ?>" alt="">
+				<div style="display:flex;align-items: center;">
+					<div style="width:20%">
+						<a href="<?= $CartProduct['productLink'] ?>">
+							<img style="width:100%" src="<?= $CartProduct['productImage'] ?>" alt="">
+						</a>
 					</div>
-					<span style="width:80%;text-align: left;"><?= $CartProduct['productName'] ?></span>
+					<div style="width:80%;text-align: left;padding:0 10px 10px;">
+						<div>
+							<a style="color:#4562a8;text-decoration:none;font-size:18px;font-weight: 700;" href="<?= $CartProduct['productLink'] ?>"><?= $CartProduct['productName'] ?></a>
+						</div>
+						<div style="padding:10px 0px"><?= $CartProduct['productShortDescription'] ?></div>
+						<div>NT$<?= number_format($CartProduct['productPrice']) ?></div>
+					</div>
+
 				</div>
 			<?php
 				# code...
@@ -277,10 +296,19 @@ class CronNew extends Bootstrap
 				$productName = wc_get_product($productID)->get_name();
 				//取得產品圖片
 				$productImage = wp_get_attachment_url(absint(wc_get_product($productID)->get_image_id()));
+				//取得產品短介
+				$productShortDescription = wc_get_product($productID)->get_short_description();
+				//取得產品價錢
+				$productPrice = floatval(wc_get_product($productID)->get_price());
+				//取得商品連結
+				$productLink = wc_get_product($productID)->get_permalink();
 				$CartProducts[] = array(
 					'productName' => $productName,
 					'productID' => $productID,
 					'productImage' => $productImage,
+					'productShortDescription' => $productShortDescription,
+					'productPrice' => $productPrice,
+					'productLink' => $productLink,
 				);
 				// 将productID添加到已存在的数组中
 				$existingCartProductIDs[] = $productID;

@@ -34,7 +34,7 @@ const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRows
 
         //呼叫AJAX寄信
 
-        await sendMail(data)
+        // await sendMail(data)
     }
 
     useEffect(() => {
@@ -48,10 +48,10 @@ const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRows
         <Form onFinish={handleOnFinish} layout="vertical" form={form}>
             <div className="grid grid-cols-1 gap-2">
                 <Form.Item hidden name="userID" />
-                <Form.Item label="信件標題" name="emailSubject">
+                <Form.Item label="信件標題" name="emailSubject" rules={[{ required: true, message: '請輸入標題' }]}>
                     <Input className="w-full" allowClear />
                 </Form.Item>
-                <Form.Item label="已選擇會員" name="userEmail">
+                <Form.Item label="已選擇會員" name="userEmail" rules={[{ required: true, message: '請選擇會員' }]}>
                     <Select mode="multiple" placeholder="已選擇會員" maxTagCount="responsive">
                         {selectedRowsArray.map((user) => (
                             <Option key={nanoid()} value={user.email}>
@@ -60,12 +60,12 @@ const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRows
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item label="選擇寄送時間" name="sendDate">
+                <Form.Item label="選擇寄送時間" name="sendDate" rules={[{ required: true, message: '請選擇時間' }]}>
                     <DatePicker showTime placeholder="選擇時間" />
                 </Form.Item>
-                <Form.Item label="選擇信件範本" name="template">
+                <Form.Item label="選擇信件範本" name="template" rules={[{ required: true, message: '請選擇範本' }]}>
                     <Select
-                        defaultValue="courses_info"
+                        placeholder="請選擇信件範本"
                         options={[
                             { value: 'courses_info', label: 'courses_info' },
                             { value: 'template1', label: 'template1' },

@@ -30,11 +30,12 @@ const index: React.FC<{ selectedRowsArray: UsersDataArray[] }> = ({ selectedRows
             template,
             form,
         }
-        console.log('🚀 ~ data:', data)
+
+        // console.log('🚀 ~ data:', data)
 
         //呼叫AJAX寄信
 
-        // await sendMail(data)
+        await sendMail(data)
     }
 
     useEffect(() => {

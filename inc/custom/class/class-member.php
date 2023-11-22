@@ -133,10 +133,16 @@ class Member extends Bootstrap
 				if ($variationID) {
 					//如果是變體商品的處理邏輯
 					if (!in_array($variationID, $existingProductIDs) && wc_get_product($variationID)) {
-						$productName = wc_get_product($variationID)->get_name();
-
+						$productName = wc_get_product($productID)->get_name();
+						/**
+						 * @var \WC_Product_Variation $variation =>改善vscode會提示 $variation is not defined錯誤
+						 */
+						$variation = wc_get_product($variationID);
+						//由變體類型取得商品屬性
+						$attributes = $variation->get_variation_attributes();
+						$variationAttributes = wc_get_formatted_variation($attributes, true, false);
 						$CompletedProducts[] = array(
-							'productName' => $productName,
+							'productName' => $productName . ' - ' . $variationAttributes,
 							'productID' => $variationID,
 						);;
 						// 将productID添加到已存在的数组中
@@ -181,10 +187,16 @@ class Member extends Bootstrap
 			if ($variationID) {
 				//如果是變體商品的處理邏輯
 				if (!in_array($variationID, $existingCartProductIDs) && wc_get_product($variationID)) {
-					$productName = wc_get_product($variationID)->get_name();
-
+					$productName = wc_get_product($productID)->get_name();
+					/**
+					 * @var \WC_Product_Variation $variation =>改善vscode會提示 $variation is not defined錯誤
+					 */
+					$variation = wc_get_product($variationID);
+					//由變體類型取得商品屬性
+					$attributes = $variation->get_variation_attributes();
+					$variationAttributes = wc_get_formatted_variation($attributes, true, false);
 					$CartProducts[] = array(
-						'productName' => $productName,
+						'productName' => $productName . ' - ' . $variationAttributes,
 						'productID' => $variationID,
 					);;
 					// 将productID添加到已存在的数组中
@@ -226,8 +238,9 @@ class Member extends Bootstrap
 				//增加變體商品判斷
 				if ($product->is_type('variable')) {
 					$variations = $product->get_available_variations();
+					//循環每個可變商品
 					foreach ($variations as $variation) {
-						// 獲取變體屬性
+						// 獲取單個可變商品中的屬性並做格式化
 						$variationAttributes = wc_get_formatted_variation($variation["attributes"], true, false);
 						$productName = $product->get_title() . ' - ' . $variationAttributes;
 						$ProductArray[] = array(

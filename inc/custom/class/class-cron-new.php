@@ -193,7 +193,7 @@ class CronNew extends Bootstrap
 		//插入自定義內容在woocommerce_email中
 		add_action('custom_customer_details', function () use ($UserName) {
 			?>
-			<span><?= $UserName ?></span>
+			<span style="color:#636363;width:100%;display:block;text-align:left;padding:15px 15px 0"><?= $UserName ?>，您好</span>
 <?php
 		}, 5);
 	}

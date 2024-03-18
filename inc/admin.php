@@ -55,17 +55,16 @@ class Bootstrap
 	 */
 	public function enqueue_script(): void
 	{
-		/*
-		 * enquene script on demand
+		//enquene script on demand
 		if (\is_admin()) {
 			// match wp-admin screen_id
 			$screen = \get_current_screen();
-			if (($screen->id !== $_ENV['KEBAB'])) return;
+			if (($screen->id !== 'toplevel_page_'.$_ENV['KEBAB'])) return;
 		} else {
 			// match front-end post_type slug {$_ENV['KEBAB']}
 			if (strpos($_SERVER['REQUEST_URI'], $_ENV['KEBAB']) === false) return;
 		}
-		*/
+
 
 		Vite\enqueue_asset(
 			dirname(__DIR__) . '/js/dist',

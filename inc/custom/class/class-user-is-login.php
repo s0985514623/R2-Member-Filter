@@ -1,21 +1,20 @@
 <?php
 
 declare (strict_types = 1);
-//判斷用戶是否登入，如果未登入就加入購物車則檔下來強迫用Google登入
+// 判斷用戶是否登入，如果未登入就加入購物車則檔下來強迫用Google登入
 namespace J7\WP_REACT_PLUGIN\React\Admin;
 
-class userIsLogin
-{
-    public function __construct() //類型指定
-    {
+class userIsLogin {
 
-        \add_action('woocommerce_add_to_cart_validation', array($this, 'init'), 10, 2);
-    }
-    public function init($passed, $product_id)
-    {
-        //如果未登入就加入購物車則檔下來強迫用Google登入
-        if (!\is_user_logged_in()) {
-            ?>
+	public function __construct() {
+		// 類型指定
+
+		\add_filter( 'woocommerce_add_to_cart_validation', array( $this, 'init' ), 10, 2 );
+	}
+	public function init( $passed, $product_id ) {
+		// 如果未登入就加入購物車則檔下來強迫用Google登入
+		if ( ! \is_user_logged_in() ) {
+			?>
 <script src="https://cdn.tailwindcss.com"></script>
 <div
 	class="noLoginPup flex flex-col fixed right-0 top-32 z-[1000] w-80 bg-white font-sans shadow-xl duration-300 animate__animated animate__fadeInRight bg-[url('/wp-content/uploads/2023/11/購物車登入-03.png')] bg-no-repeat bg-contain bg-[right_1rem_top_0.5rem]">
@@ -23,7 +22,7 @@ class userIsLogin
 		請先加入會員，<br>才能加入購物車哦！
 	</p>
 	<a class="flex items-center justify-center w-full bg-[#4562A8] text-sm font-semibold text-white h-10 gap-2 fill-white"
-		href="<?=home_url()?>/wp-login.php?loginSocial=google" data-plugin="nsl" data-action="connect"
+		href="<?php echo home_url(); ?>/wp-login.php?loginSocial=google" data-plugin="nsl" data-action="connect"
 		data-redirect="current" data-provider="google" data-popupwidth="600" data-popupheight="600">
 		<svg class="" class="google" xmlns="http://www.w3.org/2000/svg" height="1em"
 			viewBox="0 0 488 512">
@@ -48,14 +47,14 @@ const closePup = () => {
 	LoginPup.addClass('animate__fadeOutRight');
 }
 </script>
-<?php
-return false; // 阻止加入購物車
-        } //如果已登入則呼叫CronNew並且帶入購物車內容
-        else {
-            $userID = \get_current_user_id();
-            CronNew::set_mail($userID, $product_id);
+			<?php
+			return false; // 阻止加入購物車
+		} //如果已登入則呼叫CronNew並且帶入購物車內容
+		else {
+			// $userID = \get_current_user_id();
+			// CronNew::set_mail( $userID, $product_id );
 
-            return $passed;
-        }
-    }
+			return $passed;
+		}
+	}
 }

@@ -5,7 +5,7 @@
  * Author: R2
  * Author URI: https://github.com/s0985514623
  * License: GPLv2
- * Version: 1.2.9
+ * Version: 1.2.10
  * Requires PHP: 7.4
  */
 

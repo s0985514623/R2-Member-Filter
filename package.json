@@ -1,13 +1,13 @@
 {
     "name": "r2-member-filter",
     "private": true,
-    "version": "1.2.7",
+    "version": "1.2.8",
     "type": "module",
     "scripts": {
         "init": "npm install && composer install --no-interaction",
         "dev": "vite",
         "prebuild": "echo 'todo: remove console'",
-        "build": "vite build && sh release.sh",
+        "build": "vite build",
         "preview": "vite preview",
         "format": "prettier-eslint --write \"js/src/**/*.tsx\"",
         "lint": "eslint . --ext .ts,.tsx",

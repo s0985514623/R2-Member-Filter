@@ -72,6 +72,7 @@
         "archiver": "^7.0.1",
         "env-cmd": "^10.1.0",
         "release-it": "^17.1.1",
-        "yarn-upgrade-all": "^0.7.2"
+        "yarn-upgrade-all": "^0.7.2",
+        "@soderlind/wp-project-version-sync": "^2.0.2"
     }
 }
